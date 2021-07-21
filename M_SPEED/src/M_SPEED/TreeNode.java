@@ -1,4 +1,4 @@
-package Speed;
+package M_SPEED;
 
 import java.util.ArrayList;
 import java.util.HashMap;
