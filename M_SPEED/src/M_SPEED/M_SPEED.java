@@ -13,14 +13,14 @@ public class M_SPEED {
 	public static void main(String[] args) {
 		M_SPEED m_speed = new M_SPEED();
 		//speed.Read("ABbDCcaBCbdcADaBAdab", 0);
-		//m_speed.Read("AdCBb2D3a12B4c7C1A2d8a1b8c3B3A11D4a2b3 ")
+		//m_speed.Read("AdCBb2D3a12B4c7C1A2d8a1b8c3B3A11D4a2b3 ")`
 		m_speed.run("AdCBb2D3a12B4c7C1A2d8a1b8c3B3A11D4a2b3");
 		int root_freq = 0;
-		for(char c : speed.tree.root.children.keySet()) 
-			root_freq += speed.tree.root.children.get(c).frequency;
+		for(char c : m_speed.tree.root.children.keySet()) 
+			root_freq += m_speed.tree.root.children.get(c).frequency;
 		System.out.println(root_freq);
-		speed.tree.getFreqevents("Adac");
-		speed.CalcProb("b", 'c');
+		m_speed.tree.getFreqevents("Adac");
+		m_speed.CalcProb("b", 'c');
 	}
 
 	public void run(String seq){
@@ -30,7 +30,8 @@ public class M_SPEED {
 		String Storage = "";
 		String Episode = "Not found";
 		char E;
-		Sting num;
+		int num;
+		String str_num = "";
 		
 		System.out.println("Speed starts!");
 		for(int i = 0; i < seq.length(); i++){
@@ -42,16 +43,20 @@ public class M_SPEED {
 			else
 				E = Character.toUpperCase(e); //if it is true ,display lower case
 			if (i+1 < seq.length() && Character.isDigit(seq.charAt(i+1))) {
-				while ( )
-
+				str_num = "";
+				while (i+1 < seq.length() && Character.isDigit(seq.charAt(i+1))) {
+					Storage += seq.charAt(i+1);
+					i++;
+				}
 			}
+			num = Integer.parseInt(str_num);
 				
 			
 			// Episode extraction: find the episode
-			for(int i = 0; i < Storage.length(); i++) {
+			for(int j = 0; j < Storage.length(); j++) {
 				char[] StorageList = Storage.toCharArray();
-				if (StorageList[i] == E) {
-					Episode = Window.substring(i, Window.length());
+				if (StorageList[j] == E) {
+					Episode = Window.substring(j, Window.length());
 					if (Episode.length() > max_window_length)
 						max_window_length = Episode.length();
 					
@@ -60,7 +65,7 @@ public class M_SPEED {
 					Read(Episode, 0);
 					System.out.print("All possible contexts : ");
 					for(String context: EpisodeList) {
-						if(context.length() <= max_episode_length) {
+						if(context.length() <= max_window_length) {
 							System.out.print(context + ",");
 							tree.addEvents(context);
 						}
