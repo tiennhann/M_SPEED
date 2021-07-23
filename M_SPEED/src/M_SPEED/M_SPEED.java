@@ -7,79 +7,92 @@ import java.lang.Character;
 public class M_SPEED {
 	public Tree tree;
 	public ArrayList<String> EpisodeList = new ArrayList<String>();
+	
 	public M_SPEED () {
 		tree = new Tree();
-	}
+	}// end M_SPEED
+	
 	public static void main(String[] args) {
 		M_SPEED m_speed = new M_SPEED();
-		//speed.Read("ABbDCcaBCbdcADaBAdab", 0);
-		//m_speed.Read("AdCBb2D3a12B4c7C1A2d8a1b8c3B3A11D4a2b3 ")`
 		m_speed.run("AdCBb2D3a12B4c7C1A2d8a1b8c3B3A11D4a2b3");
 		int root_freq = 0;
 		for(char c : m_speed.tree.root.children.keySet()) 
 			root_freq += m_speed.tree.root.children.get(c).frequency;
 		System.out.println(root_freq);
-		m_speed.tree.getFreqevents("Adac");
-		m_speed.CalcProb("b", 'c');
-	}
+
+	} //end main
 
 	public void run(String seq){
-		int max_window_length = 1;
-		String Window = "";
-		String Timestorage = "";
-		String Storage = "";
-		String Episode = "Not found";
+		int max_window_length = 0;
+		String window = "";
+		HashMap<Character, Integer> timeStorage = new HashMap<>();
+		HashMap<Character, Integer> storage = new HashMap<>();
+		String episode = "Not found";
 		char E;
 		int num;
 		String str_num = "";
 		
 		System.out.println("Speed starts!");
+		
 		for(int i = 0; i < seq.length(); i++){
-			//System.out.println("Episode: " + Episode);
 			char e = seq.charAt(i);
-			Window += e;
-			if(e>='A' && e<='Z')
+			window += e;
+			if(e >= 'A' && e <= 'Z')
 				E = Character.toLowerCase(e); //if it is true ,display upper case
 			else
 				E = Character.toUpperCase(e); //if it is true ,display lower case
-			if (i+1 < seq.length() && Character.isDigit(seq.charAt(i+1))) {
-				str_num = "";
-				while (i+1 < seq.length() && Character.isDigit(seq.charAt(i+1))) {
-					Storage += seq.charAt(i+1);
-					i++;
-				}
-			}
-			num = Integer.parseInt(str_num);
+			
+			str_num = "";
+			int digitCount = 0;
+			while(i+1 < seq.length() && Character.isDigit(seq.charAt(i+1))) {
+				// if there is any number?
+				str_num += seq.charAt(i+1);
+				i++;
+				digitCount++;
+			} //end while
+			num = (str_num == "") ? 0 : Integer.parseInt(str_num);
 				
-			
 			// Episode extraction: find the episode
-			for(int j = 0; j < Storage.length(); j++) {
-				char[] StorageList = Storage.toCharArray();
-				if (StorageList[j] == E) {
-					Episode = Window.substring(j, Window.length());
-					if (Episode.length() > max_window_length)
-						max_window_length = Episode.length();
-					
-					Window = Window.substring(Window.length() - max_window_length, Window.length());
-					
-					Read(Episode, 0);
-					System.out.print("All possible contexts : ");
-					for(String context: EpisodeList) {
-						if(context.length() <= max_window_length) {
-							System.out.print(context + ",");
-							tree.addEvents(context);
-						}
-					}
-					System.out.println();
-					EpisodeList.clear();
-					break;
-				}
-			}
-
-			System.out.println("Window after episode extraction : " + Window);
-			
-		}
-	}
+			if(storage.containsKey(E)) {								
+				episode = seq.substring(storage.get(E), i-digitCount+1);
+				System.out.println("Episode: " + episode);
+				
+				if (episode.length() > max_window_length)
+					max_window_length = episode.length();
+				
+				window = seq.substring(i - max_window_length, i);
+				timeStorage.put(e, timeStorage.getOrDefault(e, 0)+num);
+				
+				Read(trimDigits(episode), 0);
+				System.out.print("All possible contexts : ");
+				for(String context: EpisodeList) {
+					if(context.length() <= max_window_length) {
+						System.out.print(context + ",");
+						tree.addEvents(context);
+					} //end if
+				}// end for
+				System.out.println();
+				EpisodeList.clear();
+				storage.remove(E);
+			} // end if
+			storage.put(e, i-digitCount);
+			System.out.println("Window after episode extraction : " + window);
+		} //end for
+		
+		//System.out.println("timeStorage.get('A') " + timeStorage.get('A'));
+		//System.out.println("timeStorage.get('B')" + timeStorage.get('B'));
+		
+	} //end run
+	
+	public String trimDigits(String s) {
+		StringBuilder sb = new StringBuilder();
+		for(char c : s.toCharArray()) {
+			if(Character.isDigit(c))
+				continue;
+			sb.append(c);
+		} //end for
+		return sb.toString();
+	} //end trimDigits
 
 	public void CalcProb(String window, char c){
 		TreeNode cur_node = tree.root;
@@ -94,7 +107,8 @@ public class M_SPEED {
 		float pfreq;
 		if (p == null){
 			pfreq = 0;
-		} else{
+		} 
+		else{
 			pfreq = p.frequency;
 		}
 		pfreq = pfreq*nullc;
@@ -107,15 +121,15 @@ public class M_SPEED {
 			p = cur_node.children.get(c);
 			if (p == null){
 				pfreq = 0;
-			} else{
+			} 
+			else{
 				pfreq = p.frequency;
 			}
 			pfreq = pfreq/cur_node.frequency;
 			Calc += pfreq;
-
-		}
+		} //end for
 		System.out.println(Calc);
-	}
+	} //end CalcProb
 
 	public void Read(String Episode, int i){
 		if (i == Episode.length())
@@ -131,6 +145,6 @@ public class M_SPEED {
 		Set<String> set = new HashSet<>(EpisodeList);
 		EpisodeList.clear();
 		EpisodeList.addAll(set);
-	}
-}
+	} //end Read
+} //end class
 
