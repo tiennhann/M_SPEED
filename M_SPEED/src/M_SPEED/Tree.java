@@ -12,7 +12,8 @@ public class Tree {
 	public Tree() {
 		// Marking root event as ' ' empty
 		this.root = new TreeNode(' ');
-	}
+	} //end Tree
+	
 	public void addEvents(String events) {
 		//System.out.println("Adding event :" + events);
 		TreeNode cur_node = this.root;
@@ -25,7 +26,7 @@ public class Tree {
 			//cur_node.getFreq(cur_node);
 		}
 		cur_node.frequency++;
-	}
+	} //end addEvents
 
 	public void getFreqevents(String events){
 		TreeNode cur_node = this.root;
@@ -35,12 +36,12 @@ public class Tree {
 			if (cur_node == null) {
 				System.out.println("The Frequency of "+event+" is 0");
 				break;
-			}
+			} //end if
 			cur_node.getFreq(cur_node);
-		}
-	}
+		} //end for
+	} //end getFreqevents
 
-}
+} //end class
 
 
 

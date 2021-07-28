@@ -14,25 +14,27 @@ public class M_SPEED {
 	
 	public static void main(String[] args) {
 		M_SPEED m_speed = new M_SPEED();
+		// AdCBb2D3a12B4c7C1A2d8a1b8c3B3A11D4a2b3 is a sequence
 		m_speed.run("AdCBb2D3a12B4c7C1A2d8a1b8c3B3A11D4a2b3");
 		int root_freq = 0;
 		for(char c : m_speed.tree.root.children.keySet()) 
 			root_freq += m_speed.tree.root.children.get(c).frequency;
 		System.out.println(root_freq);
-
+		
+		//m_speed.highProb();
 	} //end main
 
 	public void run(String seq){
 		int max_window_length = 0;
-		String window = "";
+		String window = "";	// window acts like a history of the sequence
 		HashMap<Character, Integer> timeStorage = new HashMap<>();
 		HashMap<Character, Integer> storage = new HashMap<>();
 		String episode = "Not found";
 		char E;
-		int num;
+		int num; // number in a sequence
 		String str_num = "";
 		
-		System.out.println("Speed starts!");
+		System.out.println("M_Speed starts!");
 		
 		for(int i = 0; i < seq.length(); i++){
 			char e = seq.charAt(i);
@@ -77,11 +79,7 @@ public class M_SPEED {
 			} // end if
 			storage.put(e, i-digitCount);
 			System.out.println("Window after episode extraction : " + window);
-		} //end for
-		
-		//System.out.println("timeStorage.get('A') " + timeStorage.get('A'));
-		//System.out.println("timeStorage.get('B')" + timeStorage.get('B'));
-		
+		} //end for		
 	} //end run
 	
 	public String trimDigits(String s) {
@@ -94,7 +92,7 @@ public class M_SPEED {
 		return sb.toString();
 	} //end trimDigits
 
-	public void CalcProb(String window, char c){
+	public float CalcProb(String window, char c){
 		TreeNode cur_node = tree.root;
 		char[] WindList = window.toCharArray();
 		float generalp = tree.root.children.get(c).frequency;
@@ -108,7 +106,7 @@ public class M_SPEED {
 		if (p == null){
 			pfreq = 0;
 		} 
-		else{
+		else {
 			pfreq = p.frequency;
 		}
 		pfreq = pfreq*nullc;
@@ -129,7 +127,20 @@ public class M_SPEED {
 			Calc += pfreq;
 		} //end for
 		System.out.println(Calc);
+		return Calc; 
 	} //end CalcProb
+	
+	public float getHighProbabilityEvent(String window) {			
+		for(char c : tree.root.children.keySet())
+			CalcProb(window, c);
+			if (tree.root.children > Calc) {
+				Calc = window.charAt(counter);
+			}
+		}
+		System.out.println ("max value is:"+ Calc);
+		return Calc;
+		
+	}
 
 	public void Read(String Episode, int i){
 		if (i == Episode.length())
@@ -141,10 +152,14 @@ public class M_SPEED {
 			// append the substring to the result and recur with an index of
 			// the next character to be processed and the result string
 			Read(Episode, j + 1);
-		}
+		} //end for
+		
 		Set<String> set = new HashSet<>(EpisodeList);
 		EpisodeList.clear();
 		EpisodeList.addAll(set);
 	} //end Read
+	
+	
+	
 } //end class
 

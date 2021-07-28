@@ -13,7 +13,7 @@ public class TreeNode {
 		event = c;
 		frequency = 0;
 		children = new HashMap<>();
-	}
+	} //end TreeNode
 
 	public ArrayList<Character> getChildren(Character c){
 		Set<Character> keySet = children.keySet();
@@ -24,22 +24,23 @@ public class TreeNode {
 		} else {
 			System.out.println("The current children of " + c + " is/are " + NewList);
 		}*/
-	}
+	} //end ArrayList
 
 
 	public void getFreq(TreeNode c){
 		if (event != ' ') {
 			System.out.println("The Frequency of " + c.ToString() + " is " + c.frequency);
-		}
-	}
+		} //end if
+	} //end getFreq
 
 	public String ToString(){
 		if (event == (' ')){
 			return "root";
-		} else {
+		} 
+		else {
 			return event.toString();
 		}
-	}
+	} //end ToString
 
-}
+} //end TreeNode
 
